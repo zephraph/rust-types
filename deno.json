@@ -1,5 +1,6 @@
 {
   "name": "@membrane/rust-types",
-  "version": "0.1.0",
+  "description": "Rust types for TypeScript",
+  "version": "1.0.0",
   "exports": "./mod.ts"
 }

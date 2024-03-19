@@ -15,7 +15,9 @@ export class Result<T extends "ok" | "error", D, E extends Error> {
     return new Result("error", Never, error);
   }
 
-  static fromPromise<T>(promise: Promise<T>) {
+  static fromPromise<T, E extends Error = Error>(
+    promise: Promise<T>
+  ): Promise<Result<"error", never, E> | Result<"ok", T, never>> {
     return promise.then(Result.ok).catch(Result.err);
   }
 
@@ -27,7 +29,7 @@ export class Result<T extends "ok" | "error", D, E extends Error> {
     return this.type === "error";
   }
 
-  unwrap() {
+  unwrap(): (T extends "ok" ? D : never) & T {
     if (this.isOk()) {
       return this.data;
     } else {
@@ -35,7 +37,7 @@ export class Result<T extends "ok" | "error", D, E extends Error> {
     }
   }
 
-  unwrapErr() {
+  unwrapErr(): (T extends "error" ? E : never) & E {
     if (this.isErr()) {
       return this.error;
     } else {
@@ -43,7 +45,11 @@ export class Result<T extends "ok" | "error", D, E extends Error> {
     }
   }
 
-  map<U>(fn: (value: T) => U) {
+  map<U>(
+    fn: (value: T) => U
+  ):
+    | Result<"ok", U, never>
+    | Result<"error", never, T extends "error" ? E : never> {
     if (this.isOk()) {
       return Result.ok(fn(this.data));
     } else {
@@ -51,7 +57,11 @@ export class Result<T extends "ok" | "error", D, E extends Error> {
     }
   }
 
-  mapErr<F extends Error>(fn: (error: E) => F) {
+  mapErr<F extends Error>(
+    fn: (error: E) => F
+  ):
+    | Result<"error", never, F>
+    | Result<"ok", T extends "ok" ? D : never, never> {
     if (this.isErr()) {
       return Result.err(fn(this.error));
     } else {
@@ -90,7 +100,7 @@ export class Option<T extends "some" | "none", V> {
     }
   }
 
-  map<U>(fn: (value: V) => U) {
+  map<U>(fn: (value: V) => U): Option<"some", U> | Option<"none", never> {
     if (this.isSome()) {
       return Option.some(fn(this.value as V));
     } else {

@@ -1,4 +1,4 @@
-# @membrane/rust-types
+# @justbe/rust-types
 
 Rust inspired types for TypeScript.
 
@@ -7,7 +7,7 @@ Rust inspired types for TypeScript.
 ### Result type
 
 ```ts
-import { Result } from "@membrane/rust-types";
+import { Result } from "@justbe/rust-types";
 
 // Use `Result.ok` to construct an OK type
 const ok = Result.ok("this works");
@@ -30,7 +30,7 @@ const myValue = promiseResult.unwrap();
 ### Option type
 
 ```ts
-import { Option } from "@membrane/rust-types";
+import { Option } from "@justbe/rust-types";
 
 // Use `Option.some` to construct a `Some` type
 const some = Option.some("value");
